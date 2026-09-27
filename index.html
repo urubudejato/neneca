@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Uma Cartinha Para Lulu ❤️</title>
+  
+  <!-- Fontes Românticas do Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Dancing+Script:wght@600;700&family=Marck+Script&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Canvas para partículas de corações flutuantes no fundo -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- Botão de controle de música ambiente -->
+  <div class="music-controller" id="musicToggle" title="Tocar música romântica">
+    <div class="music-icon">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+      </svg>
+    </div>
+    <span class="music-text">Música</span>
+  </div>
+
+  <!-- Container principal do Envelope -->
+  <main class="scene-container">
+    
+    <!-- Wrapper do Envelope interativo -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+      
+      <!-- Envelope físico -->
+      <div class="envelope" id="envelope">
+        
+        <!-- Decorações de cantos clássicas (idêntico à referência) -->
+        <svg class="corner-ornament top-left" viewBox="0 0 40 40">
+          <path d="M 5,35 A 30,30 0 0 1 35,5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M 10,35 A 25,25 0 0 1 35,10" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+        </svg>
+        <svg class="corner-ornament top-right" viewBox="0 0 40 40">
+          <path d="M 35,35 A 30,30 0 0 0 5,5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M 30,35 A 25,25 0 0 0 5,10" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+        </svg>
+        <svg class="corner-ornament bottom-left" viewBox="0 0 40 40">
+          <path d="M 5,5 A 30,30 0 0 0 35,35" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M 10,5 A 25,25 0 0 0 35,30" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+        </svg>
+        <svg class="corner-ornament bottom-right" viewBox="0 0 40 40">
+          <path d="M 35,5 A 30,30 0 0 1 5,35" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M 30,5 A 25,25 0 0 1 5,30" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+        </svg>
+
+        <!-- Linhas da aba do envelope -->
+        <div class="envelope-flap-fold">
+          <svg class="flap-lines" viewBox="0 0 540 360" preserveAspectRatio="none">
+            <line x1="0" y1="0" x2="270" y2="180" stroke="rgba(244, 160, 185, 0.45)" stroke-width="1.5" />
+            <line x1="540" y1="0" x2="270" y2="180" stroke="rgba(244, 160, 185, 0.45)" stroke-width="1.5" />
+            <line x1="0" y1="360" x2="210" y2="200" stroke="rgba(244, 160, 185, 0.2)" stroke-width="1" />
+            <line x1="540" y1="360" x2="330" y2="200" stroke="rgba(244, 160, 185, 0.2)" stroke-width="1" />
+          </svg>
+        </div>
+
+        <!-- Aba superior móvel (abre em 3D) -->
+        <div class="envelope-flap" id="envelopeFlap">
+          <div class="flap-inner"></div>
+        </div>
+
+        <!-- Selo de Cera Brilhante (Wax Seal) com Coração -->
+        <div class="wax-seal" id="waxSeal">
+          <div class="seal-glow"></div>
+          <div class="seal-circle">
+            <svg class="seal-heart" viewBox="0 0 24 24" fill="white">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Texto da Frente do Envelope (Idêntico à Referência) -->
+        <div class="envelope-front-content">
+          <div class="address-line recipient">
+            <span class="label">Para:</span>
+            <span class="name hand-lu">Lu</span>
+          </div>
+
+          <div class="wavy-divider">
+            <svg viewBox="0 0 180 16" fill="none">
+              <path d="M 0,8 Q 22,2 45,8 T 90,8 T 135,8 T 180,8" stroke="rgba(235, 150, 175, 0.7)" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="address-line sender">
+            <span class="label">De:</span>
+            <span class="name hand-kauan">Kauan</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Seta curva e indicação "Toque para abrir" (Referência) -->
+      <div class="open-cue" id="openCue">
+        <svg class="curved-arrow" viewBox="0 0 60 70" fill="none">
+          <path d="M 20,60 C 5,40 50,45 35,15" stroke="rgba(235, 150, 175, 0.7)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 26,20 L 35,14 L 42,24" stroke="rgba(235, 150, 175, 0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="cue-text">Toque para abrir</span>
+      </div>
+
+    </div>
+
+    <!-- O Conteúdo da Carta Desdobrada (Surge ao clicar) -->
+    <div class="letter-modal" id="letterModal">
+      
+      <div class="letter-paper" id="letterPaper">
+        
+        <!-- Fita decorativa fofa (Washi tape) no topo -->
+        <div class="washi-tape"></div>
+
+        <!-- Botão para fechar/guardar a carta -->
+        <button class="close-letter-btn" id="closeLetterBtn" title="Guardar de volta no envelope">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Polaroid Fotográfica Fixada na Carta -->
+        <div class="polaroid-wrapper" id="polaroidWrapper">
+          <div class="polaroid-pin">
+            <div class="pin-head"></div>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-img-box">
+              <img id="polaroidImg" src="assets/lulu.jpg" alt="Foto da Lulu">
+              <div class="photo-overlay-glow"></div>
+            </div>
+            <div class="polaroid-caption">
+              <span id="polaroidCaptionText">Minha Lulu ❤️</span>
+              <label class="change-photo-btn" title="Trocar por uma foto de vocês">
+                <input type="file" id="photoInput" accept="image/*">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span>Trocar foto</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conteúdo Textual da Carta -->
+        <div class="letter-content">
+          
+          <div class="letter-header">
+            <span class="letter-tag">Para o meu amor mais lindo ✨</span>
+            <h1 class="letter-title">Não desanima Lulu! ❤️</h1>
+          </div>
+
+          <div class="letter-body">
+            <p class="paragraph">
+              A gente já chegou até aqui e vai continuar <span class="highlight-word">filme</span>.
+            </p>
+            <p class="paragraph">
+              Sei que está difícil , mas vamos dar o nosso melhor e <span class="highlight-word">acleditar</span> que vai dar <span class="highlight-word">celto</span>.
+            </p>
+            <p class="paragraph">
+              Vamos se ajudar e, no final, vamos passar nessa <span class="highlight-word">matélia</span> juntos <span class="highlight-heart">plincesa! ❤️.</span>
+            </p>
+            
+            <div class="letter-special-love">
+              <span class="special-phrase">te amo neneca</span>
+              <span class="sparkle-stars">✨ 💖 ✨</span>
+            </div>
+          </div>
+
+          <!-- Assinatura Carinhosa -->
+          <div class="letter-footer">
+            <div class="signature-box">
+              <span class="sign-intro">Sempre ao seu lado,</span>
+              <span class="sign-name">Kauan 💌</span>
+            </div>
+          </div>
+
+          <!-- Botões de ação extras -->
+          <div class="letter-actions">
+            <button class="action-btn heart-btn" id="sendHeartBtn">
+              <span class="btn-icon">💖</span>
+              <span>Te mandar um abraço</span>
+            </button>
+            <button class="action-btn pack-btn" id="foldBackBtn">
+              <span class="btn-icon">💌</span>
+              <span>Guardar na cartinha</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

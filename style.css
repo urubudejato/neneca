@@ -1,0 +1,814 @@
+/* ==========================================================================
+   CARTINHA PARA A LULU - ESTILOS ROMÂNTICOS E ELEGANTES
+   ========================================================================== */
+
+:root {
+  --bg-dark: #121019;
+  --bg-gradient: radial-gradient(circle at 50% 40%, #251b2c 0%, #15121e 65%, #0e0c15 100%);
+  --envelope-border: rgba(235, 160, 185, 0.45);
+  --envelope-bg: rgba(29, 24, 37, 0.88);
+  --pink-accent: #f08ea4;
+  --pink-glow: rgba(240, 142, 164, 0.6);
+  --pink-soft: #ffd5df;
+  --pink-deep: #d15674;
+  --text-primary: #fff2f5;
+  --text-muted: #bba6b3;
+  --paper-bg: #fffbfd;
+  --paper-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(240, 142, 164, 0.25);
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-handwriting: 'Caveat', cursive;
+  --font-cursive: 'Dancing Script', cursive;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg-dark);
+  background-image: var(--bg-gradient);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Canvas de Partículas / Corações no Fundo */
+#hearts-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Botão de Música de Fundo */
+.music-controller {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: rgba(35, 27, 45, 0.8);
+  border: 1px solid rgba(240, 142, 164, 0.35);
+  backdrop-filter: blur(10px);
+  color: var(--pink-soft);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.music-controller:hover {
+  background: rgba(48, 35, 62, 0.95);
+  border-color: var(--pink-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 142, 164, 0.4);
+}
+
+.music-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseBeat 2s infinite ease-in-out;
+}
+
+.music-text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.music-controller.playing {
+  border-color: #ff85a1;
+  background: rgba(60, 30, 55, 0.85);
+  box-shadow: 0 0 18px rgba(255, 133, 161, 0.5);
+}
+
+.music-controller.playing .music-icon {
+  animation: musicSpin 3s linear infinite;
+  color: #ff9cb3;
+}
+
+/* ==========================================================================
+   CENA DO ENVELOPE (TELA INICIAL - FIEL À IMAGEM DE REFERÊNCIA)
+   ========================================================================== */
+
+.scene-container {
+  width: 100%;
+  max-width: 860px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.envelope-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
+}
+
+.envelope-wrapper:hover {
+  transform: scale(1.018);
+}
+
+/* Envelope Físico */
+.envelope {
+  width: 540px;
+  height: 380px;
+  max-width: 90vw;
+  max-height: 65vh;
+  aspect-ratio: 540 / 380;
+  border-radius: 30px;
+  background: var(--envelope-bg);
+  border: 1.5px solid var(--envelope-border);
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 
+              0 0 35px rgba(240, 142, 164, 0.12),
+              inset 0 0 30px rgba(240, 142, 164, 0.05);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+/* Ornamentos dos Cantos (SVG) */
+.corner-ornament {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  color: rgba(235, 160, 185, 0.35);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.corner-ornament.top-left { top: 14px; left: 14px; }
+.corner-ornament.top-right { top: 14px; right: 14px; }
+.corner-ornament.bottom-left { bottom: 14px; left: 14px; }
+.corner-ornament.bottom-right { bottom: 14px; right: 14px; }
+
+/* Linhas do Envelope */
+.envelope-flap-fold {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.flap-lines {
+  width: 100%;
+  height: 100%;
+}
+
+/* Aba superior móvel para efeito de abertura */
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 8;
+  pointer-events: none;
+}
+
+.envelope-wrapper.opening .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+/* Selo de Cera Rosa Brilhante */
+.wax-seal {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wax-seal:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.seal-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f79cb1 0%, #e2738d 50%, #c4526e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35),
+              inset 0 2px 4px rgba(255, 255, 255, 0.5),
+              inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.seal-glow {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 156, 177, 0.6) 0%, rgba(247, 156, 177, 0) 70%);
+  animation: glowPulse 2.5s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.seal-heart {
+  width: 22px;
+  height: 22px;
+  fill: #ffffff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+
+/* Informações do Envelope: Para Lu / De Kauan */
+.envelope-front-content {
+  position: absolute;
+  bottom: 45px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.address-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.address-line .label {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: #e8d7e0;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.address-line .name {
+  color: var(--pink-soft);
+  font-size: 1.9rem;
+  letter-spacing: 1px;
+}
+
+.hand-lu {
+  font-family: var(--font-cursive);
+  font-weight: 700;
+  color: #ff9cb3 !important;
+  text-shadow: 0 0 10px rgba(255, 156, 179, 0.4);
+}
+
+.hand-kauan {
+  font-family: var(--font-handwriting);
+  font-weight: 700;
+  font-size: 2.1rem !important;
+  color: #ff9cb3 !important;
+  text-shadow: 0 0 10px rgba(255, 156, 179, 0.4);
+}
+
+.wavy-divider {
+  width: 160px;
+  height: 14px;
+  margin: -2px 0;
+  opacity: 0.8;
+}
+
+.wavy-divider svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Seta e chamada "Toque para abrir" */
+.open-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  animation: floatUpDown 2.2s infinite ease-in-out;
+}
+
+.curved-arrow {
+  width: 36px;
+  height: 44px;
+}
+
+.cue-text {
+  font-size: 0.95rem;
+  color: #e5c8d6;
+  letter-spacing: 0.8px;
+  font-weight: 400;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   CARTA DESDOBRADA (SURGE AO ABRIR)
+   ========================================================================== */
+
+.letter-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background: rgba(14, 11, 20, 0.85);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+.letter-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.letter-paper {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  background: var(--paper-bg);
+  background-image: 
+    radial-gradient(ellipse at top right, rgba(255, 218, 228, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(255, 230, 238, 0.6) 0%, transparent 70%);
+  border-radius: 24px;
+  padding: 42px 36px 36px;
+  box-shadow: var(--paper-shadow);
+  border: 1px solid rgba(240, 160, 185, 0.4);
+  transform: translateY(40px) scale(0.92);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin: auto;
+}
+
+.letter-modal.active .letter-paper {
+  transform: translateY(0) scale(1);
+}
+
+/* Fita Adesiva Decorativa (Washi Tape) */
+.washi-tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 120px;
+  height: 28px;
+  background: rgba(247, 182, 198, 0.65);
+  border-left: 2px dashed rgba(255, 255, 255, 0.7);
+  border-right: 2px dashed rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+
+/* Botão Fechar */
+.close-letter-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(240, 142, 164, 0.15);
+  border: 1px solid rgba(240, 142, 164, 0.3);
+  color: #7d4454;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  z-index: 10;
+}
+
+.close-letter-btn:hover {
+  background: var(--pink-accent);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+/* Polaroid Card Fixada */
+.polaroid-wrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 26px;
+}
+
+.polaroid-pin {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+}
+
+.pin-head {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff94ab 0%, #e05374 80%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.polaroid-card {
+  background: #ffffff;
+  padding: 12px 12px 14px 12px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(180, 80, 110, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(240, 180, 195, 0.4);
+  transform: rotate(-1.8deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 240px;
+  max-width: 88%;
+}
+
+.polaroid-card:hover {
+  transform: rotate(0deg) scale(1.03);
+  box-shadow: 0 15px 35px rgba(180, 80, 110, 0.25);
+}
+
+.polaroid-img-box {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: #f8eaf0;
+}
+
+.polaroid-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.polaroid-card:hover .polaroid-img-box img {
+  transform: scale(1.05);
+}
+
+.photo-overlay-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 75%, rgba(180, 60, 90, 0.12) 100%);
+  pointer-events: none;
+}
+
+.polaroid-caption {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-cursive);
+  font-size: 1.15rem;
+  color: #633342;
+  padding: 0 2px;
+}
+
+.change-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: #ad5c74;
+  background: #fff0f4;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(235, 140, 170, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.change-photo-btn input {
+  display: none;
+}
+
+.change-photo-btn:hover {
+  background: #ffe3eb;
+  color: #8c3a52;
+  border-color: #e07390;
+}
+
+/* Conteúdo da Mensagem */
+.letter-content {
+  text-align: center;
+  color: #3f2a34;
+}
+
+.letter-header {
+  margin-bottom: 20px;
+}
+
+.letter-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #b55a73;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.letter-title {
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  color: #611e32;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.letter-body {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.paragraph {
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: #4f3340;
+  font-weight: 400;
+}
+
+.highlight-word {
+  color: #ba2851;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(240, 142, 164, 0.4);
+  padding-bottom: 1px;
+}
+
+.highlight-heart {
+  color: #b81f4a;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.letter-special-love {
+  margin-top: 10px;
+  padding: 14px;
+  background: rgba(255, 228, 236, 0.5);
+  border-radius: 16px;
+  border: 1px dashed rgba(240, 142, 164, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.special-phrase {
+  font-family: var(--font-cursive);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ad1842;
+  letter-spacing: 0.5px;
+}
+
+.sparkle-stars {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* Rodapé & Assinatura */
+.letter-footer {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(240, 160, 185, 0.35);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.sign-intro {
+  font-size: 0.85rem;
+  color: #8c6a78;
+  font-style: italic;
+}
+
+.sign-name {
+  font-family: var(--font-handwriting);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #8e1c3e;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+/* Botões de Ação na Carta */
+.letter-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.heart-btn {
+  background: linear-gradient(135deg, #f78da7 0%, #e05374 100%);
+  color: #ffffff;
+}
+
+.heart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(224, 83, 116, 0.4);
+}
+
+.pack-btn {
+  background: #fdf0f4;
+  color: #7a3a4c;
+  border: 1px solid rgba(240, 142, 164, 0.4);
+}
+
+.pack-btn:hover {
+  background: #fce1e8;
+  color: #5c2030;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   ANIMAÇÕES E EFEITOS ESPECIAIS
+   ========================================================================== */
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.95;
+  }
+}
+
+@keyframes pulseBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes musicSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Corações Interativos Flutuando ao Clicar */
+.click-heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 1.6rem;
+  user-select: none;
+  animation: floatHeart 1.4s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
+@keyframes floatHeart {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-50%, -100px) scale(1.3) rotate(15deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -180px) scale(1) rotate(-15deg);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (MOBILE & TABLET)
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .envelope {
+    width: 92vw;
+    height: auto;
+    aspect-ratio: 540 / 380;
+    border-radius: 22px;
+  }
+
+  .address-line .label {
+    font-size: 1rem;
+  }
+
+  .address-line .name {
+    font-size: 1.6rem;
+  }
+
+  .hand-kauan {
+    font-size: 1.8rem !important;
+  }
+
+  .wavy-divider {
+    width: 130px;
+  }
+
+  .letter-paper {
+    padding: 34px 20px 26px;
+    border-radius: 20px;
+  }
+
+  .letter-title {
+    font-size: 1.7rem;
+  }
+
+  .paragraph {
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .special-phrase {
+    font-size: 1.7rem;
+  }
+
+  .polaroid-card {
+    width: 210px;
+  }
+
+  .music-controller {
+    top: 14px;
+    right: 14px;
+    padding: 6px 12px;
+  }
+}
